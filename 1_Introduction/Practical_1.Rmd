@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Practical_1
 ## Kathryn Van Artsdalen
 
@@ -15,9 +20,9 @@ For a brief description of concepts diagrams, see the following [page](https://w
 
 We can discuss your solution next week. However, you are welcome to attach an image here if you wish. The following syntax can be used to include an image in a Jupyter or notebook:
 
-```r markdown
-![](image_URL)
-```
+
+![Kathryn's Concept Map](https://www.dropbox.com/s/3s7m0a8fr9m1ul0/Practical_1_concept_mapFINAL.JPG?dl=1)
+
 
 R users can, if they wish, include the URL where their image can be found.
 
