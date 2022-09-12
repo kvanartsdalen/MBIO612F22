@@ -15,7 +15,6 @@ library(tidyverse)
 * Provide at least two methods to view the number of rows and the number of columns in the `mpg` dataset
 
 ```{r}
-# Write your code here
 data(mpg)
 # First way is to use nrow and ncol functions to count the number of rows and columns, respectively
 ncol(mpg) 
@@ -24,7 +23,7 @@ nrow(mpg)
 #Second way by calling dimensions of the mpg dataset
 dim(mpg)
 
-# Third way is to make a vector of the column names and use the length function to count the number of characters/objects in the vector. Repeat for row names.
+# A third way is to make a vector of the column names and use the length function to count the number of characters/objects in the vector. Repeat for row names.
 mpg_columns <- colnames(mpg)
 length(mpg_columns)
 mpg_rows <- rownames(mpg)
@@ -42,14 +41,15 @@ ggplot(data = mpg) +
 * What is wrong with the code. 
 * Fix it so that the plot is displayed correctly.
 
-The code uses the color aesthetic inside the aes() but does not group based on a category, such as class, so there is no differentiation between variables. There is not way to scale "blue" since "blue" is not a variable name. Color = "blue" actually returns data points that are red, and does not convey any additional information about them. To change the color of all points to blue, color must be listed outside aes() so it treats all variables the same.
+The code uses the color aesthetic inside the aes() but does not group based on a category, such as class, so there is no differentiation between variables. There is no way to scale "blue" since "blue" is not a variable name. Color = "blue" actually returns data points that are red, and does not convey any additional information about them. To change the color of all points to blue, color must be listed outside aes() so it treats all variables the same.
 
 ```{r}
-# Write your code here
 # To color by a variable (such as class)
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
 
+```{r}
 # To color so all points are blue
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
@@ -64,7 +64,6 @@ ggplot(data = mpg) +
 * Inspect the result to make sure your solution worked
 
 ```{r}
-# Write your code here
 mpg$class_numeric <- as.integer(factor(
   mpg$class,
   levels = c("2seater", "subcompact", "compact", "midsize", "minivan", "suv", "pickup"),
@@ -82,7 +81,6 @@ mpg$class_numeric <- as.integer(factor(
   * set the points size to 6
 
 ```{r}
-# Write your code here
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy))+
   geom_point(mapping = aes(color = class), size = 6)+
   geom_smooth(method = "lm", color = "red")+
@@ -97,7 +95,6 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy))+
   * results should only have these columns
 
 ```{r}
-# Write your code here
 mpg[which(mpg$cty == 15 & mpg$class == "subcompact"), c("manufacturer", "model")]
 ```
 
@@ -113,7 +110,6 @@ ggplot(data = mpg) +
 * Hint: you can manually specify your own values for the shapes to use using `scale_shape_manual` geom.  You can select any of the [following shapes](https://ggplot2.tidyverse.org/articles/ggplot2-specs_files/figure-html/unnamed-chunk-7-1.png)
 
 ```{r}
-# Write your code here
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy, shape = class))+
   scale_shape_manual(values = c(0,1,5,8,15,16,17))+
