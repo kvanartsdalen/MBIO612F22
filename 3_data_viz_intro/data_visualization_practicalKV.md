@@ -22,7 +22,6 @@ library(tidyverse)
     number of columns in the `mpg` dataset
 
 ``` r
-# Write your code here
 data(mpg)
 # First way is to use nrow and ncol functions to count the number of rows and columns, respectively
 ncol(mpg) 
@@ -44,7 +43,7 @@ dim(mpg)
     ## [1] 234  11
 
 ``` r
-# Third way is to make a vector of the column names and use the length function to count the number of characters/objects in the vector. Repeat for row names.
+# A third way is to make a vector of the column names and use the length function to count the number of characters/objects in the vector. Repeat for row names.
 mpg_columns <- colnames(mpg)
 length(mpg_columns)
 ```
@@ -68,19 +67,19 @@ ggplot(data = mpg) +
 ```
 
 ![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-\* What is wrong with the code. \* Fix it so that the plot is displayed
-correctly.
+
+-   What is wrong with the code.
+-   Fix it so that the plot is displayed correctly.
 
 The code uses the color aesthetic inside the aes() but does not group
 based on a category, such as class, so there is no differentiation
-between variables. There is not way to scale “blue” since “blue” is not
-a variable name. Color = “blue” actually returns data points that are
-red, and does not convey any additional information about them. To
-change the color of all points to blue, color must be listed outside
-aes() so it treats all variables the same.
+between variables. There is no way to scale “blue” since “blue” is not a
+variable name. Color = “blue” actually returns data points that are red,
+and does not convey any additional information about them. To change the
+color of all points to blue, color must be listed outside aes() so it
+treats all variables the same.
 
 ``` r
-# Write your code here
 # To color by a variable (such as class)
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy, color = class))
@@ -94,7 +93,7 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
 ```
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 **Question 3**
 
@@ -108,7 +107,6 @@ ggplot(data = mpg) +
 -   Inspect the result to make sure your solution worked
 
 ``` r
-# Write your code here
 mpg$class_numeric <- as.integer(factor(
   mpg$class,
   levels = c("2seater", "subcompact", "compact", "midsize", "minivan", "suv", "pickup"),
@@ -128,7 +126,6 @@ mpg$class_numeric <- as.integer(factor(
     -   set the points size to 6
 
 ``` r
-# Write your code here
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy))+
   geom_point(mapping = aes(color = class), size = 6)+
   geom_smooth(method = "lm", color = "red")+
@@ -138,7 +135,7 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy))+
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 **Question 5**
 
@@ -148,7 +145,6 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy))+
     -   results should only have these columns
 
 ``` r
-# Write your code here
 mpg[which(mpg$cty == 15 & mpg$class == "subcompact"), c("manufacturer", "model")]
 ```
 
@@ -175,7 +171,7 @@ ggplot(data = mpg) +
 
     ## Warning: Removed 62 rows containing missing values (geom_point).
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 -   How can you fix that the code so all classes are displayed
 -   Hint: you can manually specify your own values for the shapes to use
@@ -184,7 +180,6 @@ ggplot(data = mpg) +
     shapes](https://ggplot2.tidyverse.org/articles/ggplot2-specs_files/figure-html/unnamed-chunk-7-1.png)
 
 ``` r
-# Write your code here
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy, shape = class))+
   scale_shape_manual(values = c(0,1,5,8,15,16,17))+
@@ -194,7 +189,7 @@ ggplot(data = mpg) +
   theme_classic()
 ```
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 **Question 7**
 
@@ -224,7 +219,7 @@ ggplot(sizeMass, aes(size, mass)) +
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 **Question 8**
 
@@ -256,7 +251,7 @@ ggplot(sizeMass.log10, aes(size_log10, mass_log10)) +
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 # Method 2
@@ -269,4 +264,4 @@ ggplot(sizeMass, aes(size, mass)) +
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](data_visualization_practicalKV_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
