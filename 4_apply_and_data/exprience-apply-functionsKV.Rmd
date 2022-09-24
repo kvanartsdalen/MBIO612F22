@@ -1,0 +1,307 @@
+---
+title: "Apply Functions Experience MBIO 612"
+author: "Kathryn Van Artsdalen"
+date: "2022-09-20"
+output: github_document
+---
+
+```{r}
+# Write you library imports here. E.g.:
+library(ggplot2)
+library(tidyverse)
+library(assertthat)
+```
+
+
+### Instructions:
+
+1. it is considered proper programming practice to load all the libraries you need in the first cell of a notebook or at the top of the R-Markdown file. Put all your imports (e.g., `library(ggplot)`) in the cell above.
+2. Create as many cells as needed to answer a question
+  * Group code that is logically related in the same cell
+  * Keep cells relatively small
+  * Format long statements or expressions, including `ggplot`, across multiple lines
+3. Submit your work to GitHub under your MBIO repository.
+  * Folder should be called `4_apply_and_data`
+    
+
+### Q1
+
+* Write a function called `sd_x` that computes the standard deviation from first principles. Recall that the standard deviation is computed as
+
+$$
+\sigma = \sqrt{\frac{\sum{(x_i - \mu)^2}}{N-1}}
+$$
+
+* $\mu$ is simply the mean of the vector of inputs
+  * it can be computed using the `mean` function
+
+
+For example, given:
+
+```x = c(1,2,3)```
+
+Since $\mu = 2$, then $\sigma = \sqrt{\frac{(1-2)^2 + (2-2)^2 + (3-2)^2}{3}} = 1$.
+
+```{r}
+# Write your code here
+# use extra cells if needed
+x <- c(1:10) # example vector 
+sd <- sqrt((sum((x - mean(x))^2)) / (length(x) - 1)) # my sd function
+
+```
+
+### Optional Question 
+
+Remember that we cannot compute the standard deviation of a single value. As such, modify your `sd_x` code to throw an error similar to those R generates when your code contains an error, whenever a user calls `sd_x` with a list containing a single element. Various methods can be used to accomplish this. One such way is by using the [`assertthat` package](https://github.com/hadley/assertthat) 
+
+```{r}
+# Write your code here if you choose to answer the question above
+# use extra cells if needed
+assert_that(length(x) > 1) # will give error message if vector has length 1
+
+```
+
+### Q2
+Given the following matrix of data where each column consists of a variable: 
+1. Convert this data frame into a tibble called data_tbl
+2. Use one of the apply-type of functions in conjunction with `sd_x` you wrote previously to compute the standard deviation for each column.
+
+```{r}
+data = matrix(1:50, ncol=5)
+colnames(data) = c("variable_1", "variable_2", "variable_3", "variable_4", "variable_5")
+data
+```
+
+```{r}
+# Write your code here
+# use extra cells if needed
+# convert data to tibble
+data_tbl <- tibble(data)
+data_tbl
+
+# compute st dev for each column
+print(apply(data_tbl, 2, sd))
+```
+
+### Q3
+
+* In this question, we will build a simulated dataset for healthy and diseased corals.  You will be creating a `tibble` called `coral_health_tbl` that contains 2 columns:
+
+1. A column called `coral`. Generate this column by sampling 100 coral species from the following values
+```{r}
+coral_pop = c("Montipora capitata",
+  "Porites compressa",
+  "Porites lobata")
+```
+ * You can use the function `sample` to select 100 values from the vector `coral_pop`
+   * You can see how the function sample works [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sample)
+ 
+2. The second column is called `is_diseased`.
+    * it represents 100 randomly selected `TRUE` or `FALSE` values that represent whether the coral is healthy or diseased.
+    * Healthy corals (`is_diseased == FALSE`; not diseased) occur with a probability of 0.8, i.e. (`is_diseased == TRUE`) occurs with a probability of 0.2
+
+```{r}
+# Write your code here
+# use extra cells if needed
+
+# sampling 100 coral to make coral column
+coral <- sample(coral_pop, 100, replace = TRUE)
+
+# probability of being diseased or not diseased
+is_diseased <- sample(c(TRUE,FALSE), 100, replace = TRUE, prob = c(0.2, 0.8))
+
+# creating coral health tibble
+coral_health_tbl <- tibble(coral, is_diseased)
+head(coral_health_tbl)
+```
+
+### Q4
+
+* The function `rnorm` is used to sample (i.e., produce) random values from a normal distribution. The syntax of the function is as follows:
+```
+rnorm(n, mu, sd)
+```
+where n is the number of samples to generate, mu is the mean of the distribution and `sd` is the standard deviation.
+
+Essentially what the function does is generate `n` random values from a normal distribution that is centered around the mean `mu` and has the standard deviation defined by the parameter `sd`. If you do not understand what this statement means, you should not worry as we will cover it in greater detail in the next section. However, you must know that this function generates n random values that are in some way close to the provided mean (`mu`) you provided.
+
+Use the cell below to experiment with the function `rnorm`. E.g.: try to generate 5 values from the distribution with a mean 10 and a standard deviation 1.
+
+```{r}
+# Write your code here
+# use extra cells if needed
+
+# rnorm with 5 numbers, mean 10, sd 1
+z <- rnorm(5, 10, 1)
+mean(z)
+sd(z)
+
+
+# also trying rnorm distribution with a large sample size, mean 10, sd 1
+my_rnorm <- rnorm(500, 10, 1)
+# generating 5 values from the distribution with about mean 10 and sd 1
+y <- sample(my_rnorm, 5)
+mean(y)
+sd(y)
+
+```
+
+### Q5
+* Create a new column in `coral_health_tbl` called `coral_cover`. This column represents coral cover values for the corals observed in your tibble
+* For the healthy coral (`is_diseased == FALSE`), sample the cover values from a normal with a mean of 9 and standard deviation of 2
+* For the diseased corals (`health_status = TRUE`), sample the cover values from a normal with mean 1 and std of 3
+* Note that this is a perfect scenario for using `mapply`
+
+```{r}
+# Write your code here
+# use extra cells if needed
+
+# generating function to determine coral cover by sampling from different distributions depending on if coral is healthy or diseased
+generate_cover_function <- function(x){
+  if(x == FALSE){
+    rnorm(1, mean = 9, sd = 2) 
+  } else {
+    rnorm(1, mean = 1, sd = 3) 
+  }
+}
+
+# creating coral cover column 
+coral_health_tbl$coral_cover <- mapply(generate_cover_function, coral_health_tbl$is_diseased)
+
+```
+
+
+### Q6
+
+* Add another column called `binary_health_status`.
+ * set the column to 0 if `is_diseased == FALSE`
+ * set the column to 1 if `is_diseased == TRUE`
+
+* A trick here is to remember that:
+  1. Corecing (converting) a logical can be done with `as.integer()`
+  2. `as.integer(TRUE)` returns 1
+  3. `as.integer(FALSE)` returns 0
+
+```{r}
+# adding column with binary health status so TRUE = 1, FALSE = 0
+coral_health_tbl$binary_health_status <- as.integer(coral_health_tbl$is_diseased)
+head(coral_health_tbl)
+
+```
+
+### Q7
+
+* Plot the distribution of `coral_cover` for healthy versus diseased corals
+* Note that I am using the histogram `geom`
+  * Histograms need only an `x`-axis because the `y` is typically computed as the number of items occurring in a bin of some predetermined width.
+    * However, instead of a raw count, we want a normalized count. You can normalize the count by setting `y = stat(count / sum(count))`  
+  * I am coloring the bin outlines in black and filling in grey for disease and white for healthy
+  * I am using `binwidth=1'.
+* Use the `labs` function to add a title and to change the labels for the `x` and `y` axes
+* The plot should look "somewhat" like the following
+![](https://www.dropbox.com/s/wdbdj05rd50vb0k/healthy-diseased.png?dl=1)
+
+```{r}
+# creating histogram plot of proportion of coral cover that is healthy vs. diseased
+ggplot(coral_health_tbl, aes(x = coral_cover, y = stat(count / sum(count)), fill = is_diseased))+
+  geom_histogram(binwidth = 1, color = "black")+
+  scale_fill_manual(values = c("white", "grey"))+
+  xlab("Coral Cover")+
+  ylab("Normalized proportion")+
+  labs(title = "Total Coral Coverage (Healthy vs. Diseased)")
+
+```
+
+### Q8
+
+* Use `geom_density` to mirror the information conveyed in the histogram above using density curves instead of histograms.
+  * Set the `adjust` parameter of `geom_density` to `2`
+* Change the `xlim` scale so that we can see the edges of the curves
+  * I.e., curves should not be cut off
+  
+* The resulting curve will look like the following
+![](https://www.dropbox.com/s/rs4rx0w6ur8p5wq/coral_distr_practical.png?dl=1)
+
+```{r}
+# creating density curves to show proportion of coral cover that is healthy vs. diseased
+ggplot(coral_health_tbl, aes(x = coral_cover, y = stat(count / sum(count)), fill = coral))+
+  geom_density(adjust = 2, color = "black", alpha = 0.6)+
+  scale_fill_manual(values = c("white", "mediumpurple", "lightpink"))+
+  xlim(-15, 25)+
+  xlab("Coral Cover")+
+  ylab("Density")+
+  labs(title = "Total Coral Coverage Per Species")
+
+```
+
+### Q9
+
+You have been provided with the dataset illustrated in the image below, which contains counts for 20 fish species across 5 locations. For convenience, only two species and 2 locations are illustrated here. Based on your knowledge of tidy data, how can you format the data shown in this file in a way that is considered `tidy`. Provide an image of a hand-drawn table (or tables if needed) that represents the table format. Briefly justify your answer in a 3-4 sentences.
+
+
+![](https://www.dropbox.com/s/ucvj0gburg8at60/tidy_data.png?dl=1)
+
+### Kathryn's Tidy Fish Dataset
+![](https://www.dropbox.com/s/amqxm9ljhfv4w32/Tidy_fishdata.png?dl=1)
+
+In tidy data, each variable forms a column, each observation forms a row, and each type of observational unit forms a table. We have one observational unit (fish species) that we are collecting data about so we have one table. We need to consolidate the locations into a column. Columns must all be variables and we have one variable per column (Genus/species name, common name, location, and count). Each observation is a row (the frequency of a fish species at a certain location), therefore the fish dataset is now in a tidy format.
+
+
+### Q10 -- Challenge (Optional)
+
+
+Recall problem `8` in the airquality dataset.
+  * Remember that you can import that dataset using `data(airquality)`
+1. Convert the `airquality` dataframe to a tibble called `airq_tbl`
+2. Replace the missing values for Solar.R using that month's average.
+    * Example:
+        * The missing value for line 6 in `airq_tbl`should be replaced with the average for month 5.
+        * The missing value for line 97 in `airq_tbl` should be replaced with the average for month 8.
+
+
+
+* Strategy:
+  1. Compute the average values for months 5, 6, 7, 8, and 9 in a names vector called `monthly_avg_SolarR`
+      * monthly_avg_SolarR[5] should return the average for May.
+      * monthly_avg_SolarR[6] should return the average for June.
+      * etc.
+      * This is an ideal use case for `tapply` with `na.rm=TRUE` (ask me!)
+  2. for each line of airq_tbl check value of Solar.R and do:
+    * if value is not `na`, return the value
+    * if value if `na`; return avg associated with `Month`
+    * This is an ideal case for `apply`
+      * You need to write your own function (call it `fix_missing_solar_R`)
+      * Recall that the argument to that function is a complete row as a vector!
+    * test your function with the following line to make sure it's working
+    ```fix_missing_solar_R(airq_tbl[5,])```
+
+
+```{r}
+# converting airquality dataset to tibble
+airq_tbl <- tibble(airquality)
+
+# using tapply to find monthly avg Solar.R
+monthly_avg_Solar.R <- tapply(airq_tbl$Solar.R, airq_tbl$Month, mean, na.rm = TRUE)
+monthly_avg_Solar.R
+
+```
+
+```{r}
+# create function that replaces NA with corresponding month's avg Solar.R, otherwise leave Solar.R value as is
+fix_missing_solar_R <- function(x){
+  ifelse(is.na(x), monthly_avg_Solar.R, x)
+}
+
+airq_tbl$Solar.R <- mapply(fix_missing_solar_R, airq_tbl$Solar.R)
+head(airq_tbl)
+
+```
+
+```{r}
+# trying to make condition to specify Solar.R corresponding month's average by subsetting
+fix_missing_solar_R <- function(x){
+  ifelse(is.na(x) & airq_tbl$Month == monthly_avg_Solar.R[x], monthly_avg_Solar.R[x], x)
+}
+
+apply(airq_tbl, 2, fix_missing_solar_R)
+```
