@@ -63,14 +63,14 @@ The function above is not very useful since it always computes the same thing, n
 get_all_perms <- function(size) {
   size_setup <- expand.grid(replicate(size, c(0:9), simplify = FALSE))
   print(size_setup)
-  nrow(size_setup)
 }
 
 # testing our function
 get_all_perms(size = 1) # permutation size 1
-get_all_perms(size = 2) # permutation size 2
-get_all_perms(size = 3) # permutation size 3
-get_all_perms(size = 4) # permutation size 4
+# get_all_perms(size = 2) for permutation size 2
+# get_all_perms(size = 3) for permutation size 3
+# get_all_perms(size = 4) for permutation size 4
+
 ```
 
 ###  Q3
@@ -116,9 +116,9 @@ $$
 
 ```{r}
 # Plots comparing N(10, 0.5) and N(10.2, 0.5)
+x <- seq(8,12, 0.1)
 x_sample <- dnorm(x, 10, 0.5)
 y_sample <- dnorm(x, 10.2, 0.5)
-x <- seq(8,12, 0.1)
 df <- data.frame(x_sample, y_sample)
 
 ggplot(data = df, aes(x = x))+
@@ -152,10 +152,7 @@ The t-test gave a result of p = 0.03, indicating that these distributions are si
   * What do you notice? Hint, sum the values obtained
   
 ```{r}
-# Plot of N(10, 0.5)
-x_sample <- dnorm(x, 10, 0.5)
-x <- seq(8, 12, 0.1)
-df <- data.frame(x_sample, y_sample)
+# Plot of N(10, 0.5) using x and x_sample from previous question
 ggplot(data = df, aes(x = x))+
   geom_line(aes(y = x_sample), size = 1)+
   xlab("x vals")+
@@ -182,7 +179,7 @@ We are starting with the probability density function and have calculated area u
 
 ```{r}
 # Write the code here
-probs <- densities * 0.1
+probs <- densities / 0.1
 sum(probs)
 ```
 
