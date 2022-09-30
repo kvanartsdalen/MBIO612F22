@@ -22,7 +22,7 @@ Write a function that returns the sample space for the experiment consisting of 
 ```{r}
 expand.grid(0:1, 0:1, 0:1)
 ```
-
+ 
 
 * generates  
 
