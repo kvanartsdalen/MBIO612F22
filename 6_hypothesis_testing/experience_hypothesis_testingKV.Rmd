@@ -1,0 +1,287 @@
+---
+title: "Experience 6 Hypothesis Testing"
+author: "Kathryn Van Artsdalen"
+date: "2022-10-09"
+output: github_document  
+--- 
+ 
+
+```{r}
+library(tidyverse)
+```
+
+Let's use the code provided below to generate a dataset representing two populations, each sampled from a Guassian with a specific population mean. Here I am generating only 5 samples
+
+```{r}
+set.seed(110)
+data_1 = tibble(measure=rnorm(5, 10, 1))
+data_1$site_name <- 'Site 1'
+data_2 = tibble(measure=rnorm(5, 12, 1))
+data_2$site_name <- 'Site 2'
+complete_data = rbind(data_1, data_2)
+complete_data
+```
+
+* I compute the mean of the dataset above using the following code:
+  * feel free to deconstruct the code to see what each chunk does.
+
+```{r}
+mean(complete_data[complete_data$site_name == "Site 1", ]$measure)
+mean(complete_data[complete_data$site_name == "Site 2", ]$measure)
+```
+
+* Use the `tapply` function instead of the code above to compute the means samples from "Site 1" and those from site 2
+  * See tapply for help if needed.
+
+```{r}
+# Write your code here
+tapply(complete_data$measure, complete_data$site_name, mean)
+```
+
+Q.2 
+
+* Use the bootstrapping-procedure covered in class to assess whether there is a statistically significant difference between the data in `Site 1` and that in `Site 2`.
+
+Make sure you follow the approach discussed in class and which consists of:
+
+1. Selecting an appropriate test statistic
+2. Bootstrapping a distribuion for the observed statistic under the null hypothesis
+3. Desciding whether to accept or reject the null based on the probability of the null
+4. provide a p-value to support your decision.
+
+```{r}
+set.seed(110)
+data_1 = tibble(measure=rnorm(40, 10, 1))
+data_1$site_name <- 'Site 1'
+data_2 = tibble(measure=rnorm(40, 13, 1))
+data_2$site_name <- 'Site 2'
+complete_data = rbind(data_1, data_2)
+```
+
+#### Q2.0 
+
+Complete the following by describing the null and the alternative hypotheses we are testing here.
+
+The null hypothesis is that there is no difference in the mean of site 1 and the mean of site 2. Any observed difference is merely due to sampling variance. The alternative hypothesis is that there is a significant difference between site 1 and 2, that is unlikely to have arisen due to chance alone
+
+```{r}
+t.test(data_1$measure, data_2$measure)
+```
+
+The p-value is 2.2e-16, which is very small and less than 0.05 so we reject our null hypothesis. There is indeed a significant difference between site 1 and 2.
+
+#### Q.2.1 
+
+Produce a graph similar the one below (geom_density) display the distributions. If you're using the same seed as mine, your graph will look exactly the same as the one below 
+
+![](https://www.dropbox.com/s/rz5jxm84kk8ac1m/dist.png?dl=1)
+
+```{r}
+# write your code here
+
+ggplot(data = complete_data, aes(x = measure, fill = site_name))+
+  geom_density(alpha = 0.4, bw = 0.6)+
+  scale_fill_manual(values = c("lightpink", "cadetblue1"))+
+  xlim(5, 18)+
+  xlab("measure")+
+  ylab("density")
+  
+```
+
+Q2.2 Select a proper test statistic and produce a distribution of the statistic under the null hypothesis. Plot the data as both a histogram and density curves. Your graph may look like this.
+
+![](https://www.dropbox.com/s/3jarqg9swneai0r/mean_under_null.png?dl=1)
+
+The test statistic is the difference in means. 
+
+```{r}
+set.seed(110)
+data_1 = rnorm(40, 10, 1)
+data_2 = rnorm(40, 13, 1)
+mean(data_1) - mean(data_2)
+```
+
+```{r}
+# concatenate two vector
+a = c(1,2,3)
+b = c(4,5,6)
+c(a, b)
+```
+
+```{r}
+# shuffle a vecor
+sample(1:5)
+```
+
+```{r}
+(split_pos + 1) : length(a)
+```
+
+```{r}
+# split data
+
+split_pos = 4
+
+a = 1:10
+
+a[1:split_pos]
+a[(split_pos + 1) : length(a)]
+```
+
+```{r}
+processOneIter = function(data_1, data_2){
+    
+    concat_data = c(data_1, data_2)
+    len_concat_data = length(concat_data)
+    
+    len_data_1 = length(data_1)    
+    shuffled_data = sample(concat_data)
+    new_data_1 = shuffled_data[1:len_data_1]
+    new_data_2 = shuffled_data[(len_data_1+1):len_concat_data]
+    mean(new_data_1) - mean(new_data_2)
+    
+}
+processOneIter(data_1, data_2)
+    
+```
+
+```{r}
+replicate(5, processOneIter(data_1, data_2))
+```
+
+```{r}
+# histogram and density curve
+mean_under_null = replicate(1000, processOneIter(data_1, data_2))
+
+ggplot()+
+  geom_histogram(aes(mean_under_null, y=..density..), bins = 30, alpha = 0.2, color = "black") + 
+  geom_density(aes(mean_under_null), bw = 0.2, size = 1.5) + 
+  xlim(-2.5, 2.5)
+```
+
+
+####  Q2.3. 
+
+Calculate and plot the observed statistic on the graph you created in Q.2.2. 
+
+```{r}
+# observed value
+observed <- mean(data_1) - mean(data_2)
+observed
+
+# histogram with observed statistic
+ggplot()+
+  geom_histogram(aes(mean_under_null, y=..density..), bins = 50, alpha=0.2, color = "black") + 
+  geom_density(aes(mean_under_null), bw = 0.2, size = 1.5) + 
+  xlim(-5, 5) + 
+  geom_point(aes(observed, 0), color = "red", size = 10)
+```
+
+#### Q2.4 
+Compute the p-value of the observed statistic under the null. What do you conclude about the hypotheses you enunciated in Q2.3
+
+```{r}
+# p value
+sum(mean_under_null <= observed) / length(mean_under_null)
+
+```
+
+The p-value is 0 meaning that it is very unlikely we would observe this test statistic observation (-2.55) in a randomized scenario. The test statistic is very different from what the null hypothesis predicts. It is unlikely that there is no difference between the means of the two distributions.
+
+#### Q.3 
+
+* The proportion of the of _P. lobata_, _M. capitata_ and _P. mendrina_ at a site X are c(0.60, 0.19, 0.21).
+* You surveyed site Y with different environmental conditions and obtains the following proportions for the three corals (0.61, 0.19, 0.20). Use the multinomial non-parametric hypotheses test to assess whether the proportions obtained at sites X and Y are statistically different.
+
+Although not explicitly required, your test should cover all the steps in Q2, i.e. appropriate graph(s) when possible, test statistics, and conclusion.
+
+## Hypotheses
+
+*Null hypothesis:* There is no statistical difference in the proportions of P. lobata, M. capitata, and P. mendrina at site x and those at site y. Any observed differences in proportions is just due to sampling variance and chance.
+
+*Alternative hypothesis:* The observed difference in proportions at the two sites is not merely chance because there is indeed a difference. 
+
+
+## Coral proportions dataset and graphing
+
+```{r}
+# creating dataset and tibble of coral proportions at site x and site y
+coral = c('P. lobata', 'P. lobata', 'M. capitata', 'M. capitata', 'P. mendrina', 'P. mendrina')
+ratios = c(0.6, 0.61, 0.19, 0.19, 0.21, 0.20)
+site = rep(c('site_x', 'site_y'), 3)
+
+coral_proportions <- tibble(coral, ratios, site)
+coral_proportions
+```
+
+```{r}
+# plotting coral proportions at sites x and y
+ggplot(coral_proportions, aes(x = coral, y = ratios, fill = site)) + 
+    geom_bar(position="dodge", stat="identity") + 
+    coord_flip()
+```
+
+## Total Variation Distance
+We will use the Total Variation Distance as the test statistic.
+
+```{r}
+subtract <- function(x){
+    x[1] - x[2]
+}
+
+subtract(c(20, 15))
+```
+
+```{r}
+tapply(coral_proportions$ratios, coral_proportions$coral, subtract)
+```
+
+```{r}
+subtract_abs <- function(x){
+    abs(x[1] - x[2])
+}
+
+sum(tapply(coral_proportions$ratios, coral_proportions$site, subtract_abs))/2
+```
+
+```{r}
+sample(c('_M. capitata_', '_P. mendrina_', '_P. mendrina_'), 200, replace=TRUE, prob=c(0.60, 0.19, 0.21))
+
+rmultinom(1, 200, prob=c(0.60, 0.19, 0.21))
+rmultinom(1, 200, prob=c(0.60, 0.19, 0.21))/200
+```
+
+
+```{r}
+sampleOneIteration = function(){
+    true_proportions = c(0.60, 0.19, 0.21)
+    sample_proportions = rmultinom(1, 200, prob=c(0.60, 0.19, 0.21))/200
+    sample_tvd = sum(abs(true_proportions - sample_proportions))/2
+    sample_tvd
+        
+}
+sampleOneIteration()
+```
+
+```{r}
+tvds <- replicate(1000, sampleOneIteration())
+```
+
+```{r}
+observed_stat = sum(tapply(coral_proportions$ratios, coral_proportions$coral, subtract_abs))/2
+observed_stat
+```
+
+```{r}
+ggplot()+ 
+  geom_histogram(aes(tvds, ..density..), bins = 15) +
+  geom_point(aes(observed_stat, 0), size = 5, color="red")
+```
+
+```{r}
+p_value = sum(tvds > observed_stat)  / length(tvds)
+p_value
+```
+
+The p-value is 0.946 which is greater than 0.05. Therefore, there is no significant difference between the proportion of corals at site x and site y, and we accept our null hypothesis. 
+
