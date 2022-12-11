@@ -1,0 +1,18 @@
+﻿Cat123,Catalog record number of observation
+VernacularNameCategory,Common name
+ScientificName,Scientific name as validated by World Register of Marine Species (WoRMS
+Phylum,Taxonomic classification of sample by phylum
+Class,Taxonomic classification of sample by class
+Condition,"Health of sample, either live, dead, or damaged"
+Temperature,Water temperature in degrees Celsius where sample was observed
+Salinity,Water salinity where sample was observed
+Ocean,Ocean name where sample was observed
+FishCouncilRegion,Regional fishery council that NOAA submitted information to for this cruise regarding deep sea corals as required by the Magnuson-Stevens Fishery Conservation and Management Act (MSA) 
+Locality,"Closest significant ocean trench, fault, or geographical location to sample"
+Date2015,Month/Day/Year of observation
+ObservationTime,Time in hours:minutes:seconds when sample was observed
+Coordinates,"Latitude, Lonitude coordinates where sample was observed"
+DepthInMeters,Water depth in meters where sample was observed
+EventID,cruise ID number and dive number observation was collected
+VehicleName,name of remotely operated vehicle (ROV) used for observation during the Okeanos cruise
+ImageURL,website address to image of species
