@@ -194,7 +194,7 @@ stat.test <- data %>%
 stat.test
 ```
 
-We noticed a large difference in the total fishing hours between 2015 and 2019 calculated above, so we performed a t-test to see if this difference is significant. Our null hypothesis was that there was no difference in total fishing hours between the years, while our alternative hypothesis was that there was a difference. Surprisingly, 2019 had significantly more fishing hours (p << 0.001). We hypothesized that 2019 would have fewer fishing hours because the monument had been expanded and so we expected that fishing would be more tightly restricted but apparently fishing activity has increased significantly. Now we will look at fishing hours by month.
+We noticed a large difference in the total fishing hours between 2015 and 2019 calculated above, so we performed a t-test to see if this difference is significant. Our null hypothesis was that there was no difference in total fishing hours between the years, while our alternative hypothesis was that there was a difference. Surprisingly, 2019 had significantly more fishing hours (p << 0.001). We hypothesized that 2019 would have fewer fishing hours because the monument had been expanded and so we expected that fishing would be more tightly restricted but apparently fishing activity has increased significantly. 
 
 
 

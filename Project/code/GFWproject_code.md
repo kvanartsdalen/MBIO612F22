@@ -95,8 +95,6 @@ significance between 2015 and 2019 fishing hours, and created graphs,
 tables, and maps to visualize geographic distribution and changes in
 fishing activity.
 
-![](data/map.png)
-
 ## Data Wrangling
 
 First we downloaded the daily data folders for each year from GFW, and
@@ -325,7 +323,7 @@ alternative hypothesis was that there was a difference. Surprisingly,
 hypothesized that 2019 would have fewer fishing hours because the
 monument had been expanded and so we expected that fishing would be more
 tightly restricted but apparently fishing activity has increased
-significantly. Now we will look at fishing hours by month.
+significantly.
 
 ## Geographical Distribution of Fishing Activity
 
